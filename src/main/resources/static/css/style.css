@@ -6,6 +6,7 @@
     --border-line-color: #A5A58D;
     --dark-color: #2F3E33;
     --light-color: #F4F1DE;
+    --btn-danger-color: #E07A5F;
     
     --font-main: 'Noto Sans KR', sans-serif;
 }
@@ -299,11 +300,23 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
+    gap: 16px;
 }
 
 .btn-save {
     background-color: var(--btn-dark-color);
     color: var(--light-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background-color: var(--btn-danger-color);
+    color: var(--light-color); /* 하얀 글씨 */
     border: none;
     padding: 8px 16px;
     border-radius: 12px;

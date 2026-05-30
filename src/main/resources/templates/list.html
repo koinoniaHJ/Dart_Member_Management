@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SAVANA</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -127,6 +128,8 @@
                     </div>
                     <div class="modal-actions">
                         <button type="submit" id="save-member-btn" class="btn-save">저장</button>
+                        <button type="button" id="update-member-btn" class="btn-save" style="display: none;">수정</button>
+                        <button type="button" id="delete-member-btn" class="btn-delete" style="display: none;">삭제</button>
                     </div>
                 </form>
             </div>

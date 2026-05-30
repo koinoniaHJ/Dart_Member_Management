@@ -1,13 +1,16 @@
 package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Member;
 import com.example.demo.repository.MemberRepository;
@@ -56,6 +59,17 @@ public class MemberController {
 	    // src/main/resources/templates/list.html 화면을 렌더링
 		return "list"; 
 
+	} //
+	
+	@PostMapping("/api/members/save")
+	public String saveMember(
+	    @ModelAttribute Member member, // name, nickName, age, rating 을 자바 객체로 한방에 바인딩
+	    @RequestParam("images") MultipartFile file // HTML의 name="images"인 파일 덩어리를 가로챔
+	) {
+	    // 1. file이 비어있지 않다면 서버 로컬 폴더에 저장하고 저장 경로 문자열 생성
+	    // 2. member.setImages(저장경로); 꽂아넣기
+	    // 3. memberRepository.save(member); DB에 전송
+	    return "redirect:/";
 	}
 
 }
