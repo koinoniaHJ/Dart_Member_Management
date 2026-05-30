@@ -1,0 +1,313 @@
+@charset "UTF-8";
+
+/* 전역 변수 설정 */
+:root {
+    --btn-dark-color: #6B705C;
+    --border-line-color: #A5A58D;
+    --dark-color: #2F3E33;
+    --light-color: #F4F1DE;
+    
+    --font-main: 'Noto Sans KR', sans-serif;
+}
+
+/* 기본 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: #F6F6F6;
+    display: flex;
+    justify-content: center;
+}
+
+/* 모바일 뷰포트 제약 컨테이너 */
+.app-container {
+    min-width: 390px;
+    max-width: 390px;
+    height: 100vh;
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-y: auto;
+}
+
+/* Header 영역 */
+.app-header {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    display: flex;
+    align-items: center;
+    padding: 16px; 
+    /* height: 60px; */
+}
+
+.header-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 12px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Main Content 영역 */
+.app-main {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* 검색 폼 */
+.search-form {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dark-color);
+    display: flex;
+    align-items: center;
+}
+
+/* 리스트 헤더 및 추가 버튼 */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.list-title {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.btn-add {
+    background-color: var(--btn-dark-color);
+    color: var(--light-color);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* 회원 리스트 */
+.member-list {
+    list-style: none;
+    border-top: 1px solid var(--border-line-color);
+    flex: 1;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+/* 프로필 이미지 (Read-Only) */
+.profile-img-wrapper {
+    margin-right: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0; /* 컨테이너 내에서 이미지 영역의 축소를 방지 */
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 회원 정보 */
+.member-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-row {
+    font-size: 0.9rem;
+}
+
+.info-label {
+    font-weight: 500;
+}
+
+/* 페이징 컨테이너 */
+.pagination-container {
+    margin-top: 24px;
+    padding-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+.page-item.active .page-btn {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.page-btn.disabled {
+    color: #ccc !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: none !important;
+}
+
+/* 추가 버튼, 회원 클릭 시 모달창 */
+.modal-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 390px;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--light-color);
+    width: 100%;
+    max-width: 320px;
+    border-radius: 1rem;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-profile-wrapper {
+    margin-bottom: 24px;
+}
+
+.modal-profile-label {
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.modal-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-file-input {
+    display: none;
+}
+
+.form-grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-label {
+    width: 60px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    text-align: left;
+}
+
+.form-input {
+    width: 170px;
+    background-color: #FFFFFF;
+    border: none;
+    outline: none;
+    height: 36px;
+    border-radius: 18px;
+    padding: 0 16px;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.modal-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-save {
+    background-color: var(--btn-dark-color);
+    color: var(--light-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-weight: 500;
+    cursor: pointer;
+}
