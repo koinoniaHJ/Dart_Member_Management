@@ -64,6 +64,14 @@ public class Member {
 
     // --- 기본 생성자 (JPA 필수 사양) ---
     public Member() {}
+    
+    // 객체지향적 UPDATE 전용 메서드
+    public void updateMemberInfo(String name, String nickName, Integer age, String rating) {
+        this.name = name;
+        this.nickName = nickName;
+        this.age = age;
+        this.rating = rating;
+    }
 
     // --- Getter / Setter 메서드 (데이터를 넣고 빼기 위한 통로) ---
     public Long getMemberId() { return memberId; }

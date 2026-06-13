@@ -104,6 +104,7 @@
                     <input type="hidden" id="modal-member-id" name="memberId">
                     <div class="modal-profile-wrapper">
                         <label for="modal-profile-file" class="modal-profile-label" title="프로필 이미지 변경">
+                        <!-- JS 에서 list 의 이미지 src를 긁어와서 바꿔주기 때문에 프로필이 있으면 변경되어 보임. -->
                             <img th:src="@{/images/dummy-profile.png}" id="modal-profile-preview" alt="Modal Profile" class="modal-profile-img">
                         </label>
                         <input type="file" id="modal-profile-file" name="profileFile" class="modal-file-input" accept="image/*">
