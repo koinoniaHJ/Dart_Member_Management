@@ -97,7 +97,7 @@
 			    </ul>
 			</nav>
 			
-			<!-- 추가 버튼, 회원 클릭 시 모달창 -->
+			<!-- 추가 버튼, 회원 클릭 시 모달창 (CREATE)-->
             <div id="modal-overlay" class="modal-overlay">
                 <form id="member-form" action="/api/members/save" method="POST" enctype="multipart/form-data" class="modal-content">
                 	<!-- 수정 모드면 memberId에 data-member-id가 담긴다. // index.js에 구현 -->
@@ -106,7 +106,7 @@
                         <label for="modal-profile-file" class="modal-profile-label" title="프로필 이미지 변경">
                             <img th:src="@{/images/dummy-profile.png}" id="modal-profile-preview" alt="Modal Profile" class="modal-profile-img">
                         </label>
-                        <input type="file" id="modal-profile-file" name="images" class="modal-file-input" accept="image/*">
+                        <input type="file" id="modal-profile-file" name="profileFile" class="modal-file-input" accept="image/*">
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
@@ -119,7 +119,7 @@
                         </div>
                         <div class="form-group">
                             <label for="member-age-input" class="form-label">나이</label>
-                            <input type="text" id="member-age-input" name="age" class="form-input" autocomplete="off" required>
+                            <input type="number" id="member-age-input" name="age" class="form-input" autocomplete="off" required>
                         </div>
                         <div class="form-group">
                             <label for="member-rating-input" class="form-label">RATING</label>

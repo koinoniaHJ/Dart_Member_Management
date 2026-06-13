@@ -73,9 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 삭제 버튼 클릭 시 이벤트 로직 추가.
     if (deleteBtn) {
         deleteBtn.addEventListener('click', function() {
-            // 사용자에게 삭제 여부를 한 번 더 묻습니다.
             if (confirm('이 회원을 정말로 삭제하시겠습니까?')) {
-                // 확인 시 폼 액션을 삭제용 컨트롤러 라우터로 변경 후 데이터를 날립니다.
+                // 확인 시 폼 액션을 삭제용 컨트롤러 라우터로 변경 후 데이터를 보낸다.
                 memberForm.action = '/api/members/delete';
                 memberForm.submit();
             }
@@ -85,8 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (updateBtn) {
         updateBtn.addEventListener('click', function() {
             if (confirm('회원 정보를 수정하시겠습니까?')) {
-                memberForm.action = '/api/members/update'; // 확실하게 수정 주소 세팅
-                memberForm.submit(); // 서버로 전송
+                memberForm.action = '/api/members/update'; // 수정 주소 세팅
+                memberForm.submit();
             }
         });
     }
