@@ -194,4 +194,27 @@ public class MemberController {
 	
 	// ----------UPDATE--------------------------------------------------
 
+	@PostMapping("/api/members/delete")
+	// 혹시라도 이미 삭제되었거나 없는 회원을 삭제하려고 할 때를 대비해 먼저 해당 ID의 회원이 존재하는지 확인 (안전성 확보)
+	public String deleteMember(@RequestParam("memberId") Long memberId) {
+		Member existingMember = memberRepository.findById(memberId)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다. ID: " + memberId));
+
+		// 실제 파일이 저장된 경로가 있다면 파일부터 삭제
+		String imagePath = existingMember.getImages();
+		if (imagePath != null && !imagePath.isEmpty()) {
+			// imagePath가 "/uploads/파일명.jpg" 형태이므로 실제 시스템 경로로 변환
+			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static";
+			File fileToDelete = new File(uploadDir + imagePath);
+			
+			if (fileToDelete.exists()) {
+				fileToDelete.delete(); // 서버 하드디스크에서 파일 삭제
+			}
+		}
+
+		// DB에서 회원 데이터 삭제
+		memberRepository.deleteById(memberId);
+
+		return "redirect:/";
+	}
 }
