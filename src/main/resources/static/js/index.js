@@ -9,12 +9,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteBtn = document.getElementById('delete-member-btn');
     const memberForm = document.getElementById('member-form');
 
+	// 프로필 삭제 버튼 및 여부.
+	const removeProfileBtn = document.getElementById('remove-profile-btn');
+	const removeImageFlag = document.getElementById('remove-image-flag');
+	
     // 1. 회원 리스트 클릭 시 모달 띄우기 (수정 모드)
     memberItems.forEach(function(item) {
         item.addEventListener('click', function() {
             // 클릭한 회원의 고유 ID(PK) 가져오기 
             // (HTML의 data-member-id 속성에 숨겨둔 값을 뽑아온다.)
             const memberId = item.getAttribute('data-member-id');
+			// 모달 열 때 이미지 삭제 플래그 무조건 초기화
+            removeImageFlag.value = 'false';
+            
+            // 등록 모드일 때 지웠던 프로필 삭제 버튼을 수정 모드일 땐 다시 보여줌
+            if (removeProfileBtn) removeProfileBtn.style.display = 'block';
 
             // 클릭한 리스트 안에 있는 텍스트 데이터 긁어오기
             const infoValues = item.querySelectorAll('.info-value');
@@ -49,6 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addBtn) {
         addBtn.addEventListener('click', function() {
             document.getElementById('member-form').reset();
+			// 모달 열 때 이미지 삭제 플래그 무조건 초기화.
+            removeImageFlag.value = 'false';
+			// 새 회원 등록 시에는 삭제 플래그를 false로 초기화하고, 삭제 버튼 숨기기
+			if (removeProfileBtn) removeProfileBtn.style.display = 'none';
 
             /* 숨겨진 ID 값을 반드시 공백으로 직접 지워줘야 새 회원 등록(INSERT)이 된다.
             기존 회원을 클릭해서 수정 모달을 열었다가 닫은 후, 
@@ -115,9 +128,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(event) {
                     // 선택한 이미지를 동그란 프로필 영역에 집어넣음
                     profilePreview.src = event.target.result;
+					// 새 이미지를 선택했으므로 삭제 플래그를 끔 ===
+					removeImageFlag.value = 'false';
                 };
                 reader.readAsDataURL(file);
             }
+        });
+    }
+	
+	// 5. 프로필 삭제 버튼 클릭 시 기능
+    if (removeProfileBtn) {
+        removeProfileBtn.addEventListener('click', function() {
+            // 1. 이미지를 기본 더미 이미지로 교체
+            document.getElementById('modal-profile-preview').src = '/images/dummy-profile.png';
+            // 2. 혹시 선택되어 있던 파일이 있다면 input value 초기화
+            document.getElementById('modal-profile-file').value = '';
+            // 3. 백엔드에 "이 회원은 이미지를 삭제함" 이라고 알려주는 플래그 켜기
+            removeImageFlag.value = 'true';
         });
     }
 });

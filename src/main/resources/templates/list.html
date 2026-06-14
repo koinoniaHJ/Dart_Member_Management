@@ -34,14 +34,9 @@
     
 			    <li class="member-item" th:each="m : ${members}" th:data-member-id="${m.memberId}">
 			        <div class="profile-img-wrapper">
-			        	<!-- images 컬럼이 비어있지 않다면 실제 이미지 등록 -->
-					    <img th:if="${not #strings.isEmpty(m.images)}" 
-					         th:src="@{${m.images}}" 
-					         alt="Profile" class="profile-img">
-					    <!-- 이미지가 존재하는 게 아니라면 더미 이미지 등록 -->    
-					    <img th:unless="${not #strings.isEmpty(m.images)}" 
-					         th:src="@{/images/dummy-profile.png}" 
-					         alt="Profile" class="profile-img">
+			         	<!-- images 컬럼이 비어있지 않다면 실제 이미지 등록, 비어 있다면 더미 이미지 등록 -->
+					    <img th:src="${m.images != null} ? @{${m.images}} : @{/images/dummy-profile.png}" 
+					     alt="Profile" class="profile-img">
 					</div>
 			        
 			        <div class="member-info">
@@ -108,6 +103,9 @@
                             <img th:src="@{/images/dummy-profile.png}" id="modal-profile-preview" alt="Modal Profile" class="modal-profile-img">
                         </label>
                         <input type="file" id="modal-profile-file" name="profileFile" class="modal-file-input" accept="image/*">
+                    	<!-- 프로필 삭제 -->
+                        <button type="button" id="remove-profile-btn" class="btn-remove-profile">프로필 삭제</button>
+					    <input type="hidden" id="remove-image-flag" name="removeImage" value="false">
                     </div>
                     <div class="form-grid">
                         <div class="form-group">

@@ -127,7 +127,9 @@ public class MemberController {
 	// ----------INSERT--------------------------------------------------
 	
 	@PostMapping("/api/members/update")
-	public String updateMember(@ModelAttribute Member member, @RequestParam("profileFile") MultipartFile file) {
+	public String updateMember(@ModelAttribute Member member, 
+			@RequestParam("profileFile") MultipartFile file,
+			@RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage) {
 		/*
 		 * repository 에게 findById로 memberId를 전달 -> JPA가 결과물을 Optional 객체로 감싸서 return ->
 		 * 반환된 Optional 객체에 .orElseThrow() 메서드를 실행하여 데이터가 있으면 existingMember에 넣어주고,
@@ -151,7 +153,10 @@ public class MemberController {
 		existingMember.updateMemberInfo(member.getName(), member.getNickName(), member.getAge(), member.getRating());
 
 		// 사용자가 이미지를 새로 첨부했다면
-		if (file != null && !file.isEmpty()) {
+		if (removeImage) {
+			// 프론트에서 "삭제" 버튼을 눌렀다고 플래그가 넘어오면, 이미지를 null로 세팅
+			existingMember.setImages(null);
+		} else if (file != null && !file.isEmpty()) {
 			try {
 				// 이미지가 저장될 서버의 실제 주소를 동적으로 저장.
 				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
@@ -176,7 +181,7 @@ public class MemberController {
 				e.printStackTrace();
 			}
 		}
-		/* 만약 수정할 때 이미지를 새로 첨부하지 않았다면 (if 문이 실행되지 않으므로)
+		/* 만약 수정할 때 removeImage가 false이고, file도 첨부 안 했다면 (if 문이 실행되지 않으므로)
 		existingMember가 원래 가지고 있던 기존 이미지 경로가 지워지지 않고 그대로 유지.
 		 */
 		
