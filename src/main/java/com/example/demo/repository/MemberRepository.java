@@ -1,6 +1,9 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Member;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	개발자가 컨트롤러에서 해당 자바 메서드를 호출하면, MemberRepository 인터페이스로 전달되어 
 	JPA 엔진이 해당 메서드와 매핑된 SQL문을 실시간으로 조립 및 캡슐화하여 오라클 DB로 전송하고 실행.
 	*/
+	
+	// 이름 또는 닉네임에 검색어가 포함된 회원을 페이징해서 가져오는 메서드
+    Page<Member> findByNameContainingOrNickNameContaining(String nameKeyword, String nickNameKeyword, Pageable pageable);
 }

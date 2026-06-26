@@ -27,7 +27,10 @@ public class MemberController {
 
 	// 사용자가 웹사이트 주소(http://localhost:8080/)로 들어왔을 때 ---
 	@GetMapping("/")
-	public String mainUrl(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	public String mainUrl(@RequestParam(defaultValue = "1") int page, 
+			// 회원 검색 파라미터, 검색어가 없어도 페이지가 열려야하기 때문에 required = false 설정.
+			@RequestParam(required = false) String searchKeyword,
+			Model model) {
 		/*
 		 * @RequestParam이 파라미터를 감시 후 숫자를 int page에 넣어준다. value = "page"은 URL의 파라미터 key
 		 * 값과 매핑되어, 값이 매개변수 int page로 들어간다. defaultValue = "1" 설정으로 page 변수에는 기본값으로 1이
@@ -38,14 +41,21 @@ public class MemberController {
 
 		// 0번째 페이지(첫 페이지), 한 페이지당 4개씩, memberId 기준 오름차순(Ascending) 정렬
 		Pageable pageable = PageRequest.of(pageIndex, 4, Sort.by("memberId").ascending());
-		// JPA는 Pageable을 파라미터로 받으면 Repository 를 가동시켜 오라클 DB에서 해당 페이지 4명의 데이터와 전체 페이지
-		// 정보를 받아온다.
-		Page<Member> memberPage = memberRepository.findAll(pageable);
+		
+		Page<Member> memberPage;
+		// 검색어가 존재하고, 빈 문자열이 아닌 경우 검색 메서드 호출
+		if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+			// 이름이나 닉네임 둘 중 하나라도 검색어가 포함되면 가져옴
+			memberPage = memberRepository.findByNameContainingOrNickNameContaining(searchKeyword, searchKeyword, pageable);
+		} else {
+			// JPA는 Pageable을 파라미터로 받으면 Repository 를 가동시켜 오라클 DB에서 해당 페이지 4명의 데이터와 전체 페이지 정보를 받아온다.
+			// 검색어가 없으면 기존처럼 전체 목록 조회
+			memberPage = memberRepository.findAll(pageable);
+		}
 
 		// 페이징 블록 계산 (예: 1~5 버튼 그룹 생성)
 		int currentPage = memberPage.getNumber() + 1; // 현재 페이지.
 		int totalPages = memberPage.getTotalPages(); // 전체 페이지 개수.
-
 		// 현재 페이지 기준으로 화면에 보여줄 시작 버튼과 끝 버튼 번호 계산
 		int startPage = (((currentPage - 1) / 5) * 5) + 1; // 현재 페이지를 기준으로 하단에 보여줄 '시작 버튼 번호'를 계산.
 		int endPage = Math.min(startPage + 4, totalPages); // 끝 버튼 번호를 계산.
@@ -61,13 +71,15 @@ public class MemberController {
 		model.addAttribute("endPage", endPage); // 끝 버튼 번호 (예: 5)
 		model.addAttribute("hasPrev", memberPage.hasPrevious()); // 이전 페이지 존재 여부 (true/false)
 		model.addAttribute("hasNext", memberPage.hasNext()); // 다음 페이지 존재 여부 (true/false)
-
+		// 검색어를 다시 화면에 보내줘서 input 창에 유지시키고, 페이징 링크에도 엮어줌
+		model.addAttribute("searchKeyword", searchKeyword);
+			
 		// src/main/resources/templates/list.html 화면을 렌더링
 		return "list";
 
 	}
 	
-	// ----------SELECT ALL--------------------------------------------------
+	// ----------SELECT ALL & SEARCH--------------------------------------------------
 
 	@PostMapping("/api/members/save")
 	public String saveMember(@ModelAttribute Member member, // HTML의 name 속성의 이름과 Member 클래스의 필드명이 일치하면, Spring이 자동으로
@@ -129,7 +141,7 @@ public class MemberController {
 	@PostMapping("/api/members/update")
 	public String updateMember(@ModelAttribute Member member, 
 			@RequestParam("profileFile") MultipartFile file,
-			@RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage) {
+			@RequestParam(defaultValue = "false") boolean removeImage) {
 		/*
 		 * repository 에게 findById로 memberId를 전달 -> JPA가 결과물을 Optional 객체로 감싸서 return ->
 		 * 반환된 Optional 객체에 .orElseThrow() 메서드를 실행하여 데이터가 있으면 existingMember에 넣어주고,
@@ -196,7 +208,7 @@ public class MemberController {
 
 	@PostMapping("/api/members/delete")
 	// 혹시라도 이미 삭제되었거나 없는 회원을 삭제하려고 할 때를 대비해 먼저 해당 ID의 회원이 존재하는지 확인 (안전성 확보)
-	public String deleteMember(@RequestParam("memberId") Long memberId) {
+	public String deleteMember(@RequestParam Long memberId) {
 		Member existingMember = memberRepository.findById(memberId)
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다. ID: " + memberId));
 

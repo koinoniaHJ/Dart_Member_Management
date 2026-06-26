@@ -13,17 +13,20 @@
         
         <header class="app-header">
             <img th:src="@{/images/header-icon.png}" id="header-icon" alt="Savana Logo" class="header-logo">
-            <h1 class="header-title">SAVANA</h1>
+            <a href="/">
+	            <h1 class="header-title">SAVANA</h1>
+            </a>
         </header>
 
         <main class="app-main">
             
-            <form id="search-form" action="" method="GET" class="search-form">
-                <input type="text" id="search-keyword" name="search-keyword" class="search-input" placeholder="회원 검색">
-                <button type="submit" id="search-btn" class="search-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </button>
-            </form>
+            <form id="search-form" action="/" method="GET" class="search-form">
+				<!-- 검색 후에도 검색창에 글자가 남아있게 value에 searchKeyword 받아오기. -->
+			    <input type="text" id="search-keyword" name="searchKeyword" class="search-input" placeholder="회원 검색" th:value="${searchKeyword}">
+			    <button type="submit" id="search-btn" class="search-btn">
+			        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+			    </button>
+			</form>
 
             <section class="list-header">
                 <h2 class="list-title">회원 목록</h2>
@@ -53,8 +56,9 @@
 			<nav id="pagination-container" class="pagination-container" th:if="${totalPages > 0}">
 			    <ul class="pagination-list">
 			        
+			        <!-- 페이지네이션 링크(th:href)에 searchKeyword를 적어준 것은 페이지 버튼을 눌러서 이동할 때도 검색 조건이 풀리지 않고 계속 유지되면서 다음 검색 결과를 보여주기 위해 -->
 			        <li class="page-item">
-			            <a th:if="${hasPrev}" th:href="@{/(page=${currentPage - 1})}" class="page-btn prev-btn">◀</a>
+			            <a th:if="${hasPrev}" th:href="@{/(page=${currentPage - 1}, searchKeyword=${searchKeyword})}" class="page-btn prev-btn">◀</a>
 			            <span th:unless="${hasPrev}" class="page-btn prev-btn disabled">◀</span>
 			        </li>
 			
@@ -63,7 +67,7 @@
 			        <li class="page-item" 
 			            th:each="pageNo : ${#numbers.sequence(startPage, endPage)}" 
 			            th:classappend="${pageNo == currentPage} ? 'active'">
-			            <a th:href="@{/(page=${pageNo})}" class="page-btn" th:text="${pageNo}">1</a>
+			            <a th:href="@{/(page=${pageNo}, searchKeyword=${searchKeyword})}" class="page-btn" th:text="${pageNo}">1</a>
 			        </li>
 			        <!-- 브라우저에 도달할 때 아래처럼 5개의 독립된 구체적인 HTML 태그로 변환되어 
 			        page 파라미터가 controller 로 전달 되는 것.
@@ -85,7 +89,7 @@
 					-->
 			
 			        <li class="page-item">
-			            <a th:if="${hasNext}" th:href="@{/(page=${currentPage + 1})}" class="page-btn next-btn">▶</a>
+			            <a th:if="${hasNext}" th:href="@{/(page=${currentPage + 1}, searchKeyword=${searchKeyword})}" class="page-btn next-btn">▶</a>
 			            <span th:unless="${hasNext}" class="page-btn next-btn disabled">▶</span>
 			        </li>
 			        
